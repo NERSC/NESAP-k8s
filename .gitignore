@@ -1,2 +1,4 @@
 namesapce/settings.toml
+opt/etc/*
+opt/bin/kubectl
 **/rendered/
