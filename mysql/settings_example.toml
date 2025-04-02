@@ -1,0 +1,10 @@
+[constant]
+nersc_user_pid = "<your nersc pid>"
+nersc_user_gid = "<the gid of the nersc project that you want to run this in>"
+
+[zip]
+db_name = "science"
+db_user_password = "pw"
+db_root_password = "rpw"
+db_user_name = "user"
+

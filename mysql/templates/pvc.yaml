@@ -1,0 +1,17 @@
+{{- range $i, $vol := .Values.volumes -}}
+{{- $pvc := index $.Values.persistentVolumeClaims $vol.name}}
+{{- if not $pvc.existing -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $vol.persistentVolumeClaim.claimName }}
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: nfs-client
+  volumeMode: Filesystem
+{{- end }}
+{{- end }}
