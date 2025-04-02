@@ -1,0 +1,6 @@
+[constant]
+rancher_pid_1 = "<first part of pid>"
+rancher_pid_2 = "<second part of pid>"
+
+[zip]
+name = "<namespace name>"

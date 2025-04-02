@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{{name}}}
+  annotations:
+    field.cattle.io/projectId: {{{rancher_pid_1}}}:{{{rancher_pid_2}}}
+
