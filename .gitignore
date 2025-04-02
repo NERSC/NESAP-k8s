@@ -1,4 +1,10 @@
 namespace/settings.toml
+
 opt/etc/*
 opt/bin/kubectl
+opt/bin/darwin-arm64/
+opt/bin/helm
+opt/bin/helm-v3.17.2-darwin-arm64.tar.gz
+
+
 **/rendered/
