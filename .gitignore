@@ -1,4 +1,4 @@
-namesapce/settings.toml
+namespace/settings.toml
 opt/etc/*
 opt/bin/kubectl
 **/rendered/
