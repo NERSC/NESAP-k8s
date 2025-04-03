@@ -1734,6 +1734,13 @@ function M.mkdir(path)
 end
 
 
+---@diagnostic disable-next-line: unused-local
+function M.cp(src, dest)
+    return io.popen(
+        F"cp -r '{src}' '{dest}' && echo true || echo false"
+    ):read("*a"):gsub("\n", "") == "true"
+end
+
 --------------------------------------------------------------------------------
 -- product and zip iterators
 --------------------------------------------------------------------------------
@@ -4048,6 +4055,23 @@ local function save_template(dest_spec, data, tmpl_params)
     return tmpl_dest
 end
 
+
+local function copy_resource(dest_spec, src, dst, tmpl_params)
+    log.debug(f"Copying resource using path spec: {dest_spec}")
+
+    local tmpl_dest = lustache:render(dest_spec, tmpl_params) .. "/" .. dst
+    local folder_dest, _, _ = gears.basename(tmpl_dest)
+    if not gears.dir_exists(folder_dest) then
+        log.info(f"Folder {folder_dest} does not exist, creating")
+        gears.mkdir(folder_dest)
+    end
+
+    log.debug(f"Copying {src} to {tmpl_dest}")
+    gears.cp(src, folder_dest)
+
+    return tmpl_dest
+end
+
 --------------------------------------------------------------------------------
 -- parse settings
 --------------------------------------------------------------------------------
@@ -4131,6 +4155,7 @@ settings, then the output will be written to: `out_1/put_2.txt`.
 ]])
 parser:option("--overwrite", "JSON-formatted overwrite table, eg: '{\"key\": \"new value\"}'"):args(1)
 parser:option("--dir", "Assume template and output paths are directories"):args(0):default(false)
+parser:option("--resource", "Regex used to check if path should not be rendered"):args(1):default("")
 
 parser:help_vertical_space(2)
 
@@ -4141,13 +4166,19 @@ print(args.dir)
 
 -- template and settings
 local template_files = {}
+local resource_files = {}
 if args.dir then
     local files = walk_path(args.template)
     ---@diagnostic disable-next-line: unused-local
     local files_st = json.encode(files)
     log.info(f"Running in DIR mode, on the following files: {files_st}")
     for _, v in ipairs(files) do
-        template_files[v.dest] = table.concat(gears.read_lines(v.src), "\n")
+        if ("" ~= args.resource) and (string.match(v.src, args.resource)) then
+            log.debug(f"Skipping {v.src} => identified as a resource")
+            resource_files[v.dest] = v.src
+        else
+            template_files[v.dest] = table.concat(gears.read_lines(v.src), "\n")
+        end
     end
 else
     template_files["__main__"] = table.concat(
@@ -4225,6 +4256,13 @@ if (nil == next(settings.product)) and (nil == next(settings.zip)) then
         ---@diagnostic disable-next-line: unused-local
         local tmpl_dest = save_template(output, tmpl_inst, tmpl)
         log.info(f"Template generated at: {tmpl_dest}")
+    end
+
+    for dst, src in pairs(resource_files) do
+        log.info(f"Copying resource file {src} => {dst}")
+        ---@diagnostic disable-next-line: unused-local
+        local resource_dst = copy_resource(args.output, src, dst, tmpl)
+        log.info(f"Copied resource to: {resource_dst}")
     end
 end
 
@@ -4344,6 +4382,13 @@ if nil ~= next(settings.product) then
             local tmpl_dest = save_template(output, tmpl_inst, tmpl)
             log.info(f"Template generated at: {tmpl_dest}")
         end
+
+        for dst, src in pairs(resource_files) do
+            log.info(f"Copying resource file {src} => {dst}")
+            ---@diagnostic disable-next-line: unused-local
+            local resource_dst = copy_resource(args.output, src, dst, tmpl)
+            log.info(f"Copied resource to: {resource_dst}")
+        end
     end
 end
 
@@ -4365,6 +4410,13 @@ if nil ~= next(settings.zip) then
             ---@diagnostic disable-next-line: unused-local
             local tmpl_dest = save_template(output, tmpl_inst, tmpl)
             log.info(f"Template generated at: {tmpl_dest}")
+        end
+
+        for dst, src in pairs(resource_files) do
+            log.info(f"Copying resource file {src} => {dst}")
+            ---@diagnostic disable-next-line: unused-local
+            local resource_dst = copy_resource(args.output, src, dst, tmpl)
+            log.info(f"Copied resource to: {resource_dst}")
         end
     end
 end
