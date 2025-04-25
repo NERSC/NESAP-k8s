@@ -2,7 +2,7 @@
 
 ## Related Work
 
-1. Andrew Naylor's user-space prometheus-based
+1. [Andrew Naylor's](https://github.com/asnaylor) user-space prometheus-based
    [Workflow Monitoring Toolchain](https://github.com/asnaylor/nersc-metrics-scripts)
 
 **Note:** These are beta projects, use at your own discretion
