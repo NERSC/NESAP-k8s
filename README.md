@@ -1,11 +1,11 @@
 # Some Kubectl and Helm Examples for Superfacility Projects
 
+**Note:** These are beta projects, use at your own discretion
+
 ## Related Work
 
 1. [Andrew Naylor's](https://github.com/asnaylor) user-space prometheus-based
    [Workflow Monitoring Toolchain](https://github.com/asnaylor/nersc-metrics-scripts)
-
-**Note:** These are beta projects, use at your own discretion
 
 ## Before you start
 
