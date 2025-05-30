@@ -3997,7 +3997,7 @@ local function walk_path(pth, name)
     local paths = {}
     log.debug(f"Scanning: Path = {pth}, Module = {name}")
     for _, d in pairs(gears.read_dir(pth)) do
-        log.debug(f"Found: {d.name}, id_dir={d.is_dir}")
+        log.debug(f"Found: {d.name}, is_dir={d.is_dir}")
         if d.is_dir then
             log.trace(f"Entering: {d.name}")
             local s_libs = walk_path(
