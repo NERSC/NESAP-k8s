@@ -4178,14 +4178,27 @@ parser:option(
 ):args(0):default(false)
 parser:option(
     "--resource", "Regex used to check if path should not be rendered. This is only used in directory mode"
-):args(1):default("")
+):args(1)
 parser:option(
     "--chmod", "Comma-separated list of chmod operations applied to rendered templates"
-):args(1):default("")
+):args(1)
+parser:option(
+   "--chmod-basename", "Apply --chmod operation to basename of path also"
+):args(0):default(false)
 
-parser:help_vertical_space(2)
+parser:help_vertical_space(1)
 
 local args = parser:parse()
+
+
+-------------------------------------------------------------------------------
+-- validate inputs
+--------------------------------------------------------------------------------
+
+if args.chmod_basename and (nil == args.chmod) then
+    log.fatal("Cannot chmod basename without chmod inputs")
+    error("Inconsistent inputs")
+end
 
 -------------------------------------------------------------------------------
 -- search for templates (if processing a directory)
@@ -4200,7 +4213,7 @@ if args.dir then
     local files_st = json.encode(files)
     log.info(f"Running in DIR mode, on the following files: {files_st}")
     for _, v in ipairs(files) do
-        if ("" ~= args.resource) and (string.match(v.src, args.resource)) then
+        if (nil ~= args.resource) and (string.match(v.src, args.resource)) then
             log.debug(f"Skipping {v.src} => identified as a resource")
             resource_files[v.dest] = v.src
         else
@@ -4464,13 +4477,30 @@ end
 -- set the correct permission bits
 --------------------------------------------------------------------------------
 
-if "" ~= args.chmod then
+if nil ~= args.chmod then
+    local basenames = {}
     log.info("chmod'ing rendered files")
     for _, v in pairs(split(args.chmod, ",")) do
         log.debug("Applying chmod perm: " .. v)
         for _, out_file in pairs(output_files) do
+            -- chmod file
             local chmod_str = "chmod -R " .. v .. " " .. out_file
-            log.debug("Running: " .. chmod_str)
+            log.trace("Running: " .. chmod_str)
+            os.execute(chmod_str)
+            -- in basename mode, chmod the basename of the file also, in order
+            -- to avoid duplicating operations, we'll collect a dict of paths
+            -- first, and chmod later
+            if args.chmod_basename then
+                local bn, _, _ = gears.basename(out_file)
+                basenames[bn] = false
+            end
+        end
+        -- now chmod all collected basenames
+        log.debug("chmod'ing basenames of randered files")
+        for k, _ in pairs(basenames) do
+            -- don't do '-R' => we're already one dir up due to basename
+            local chmod_str = "chmod " .. v .. " " .. k
+            log.trace("Running: " .. chmod_str)
             os.execute(chmod_str)
         end
     end
