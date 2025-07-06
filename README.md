@@ -18,11 +18,7 @@ Before installing Helm Charts, you will need:
 
 ## Create a new namespace in Spin
 
-1. Login to rancher2.spin.nersc.gov;
-2. click the cluster name (as of May 12, 2024, either "development" or
-   "production");
-3. click "Project/Namespaces" on the sidebar, click "Create Namespace" beside
-   your chosen project.
+[This guide](namespace/README.md) describes how to create namespaces on Spin.
 
 ## Install `kubectl`
 
