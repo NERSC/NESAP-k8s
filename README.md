@@ -107,6 +107,18 @@ kubectl exec <name of pod> -n <name of namespace> -- <command>
   ```
   kubectl exec <name of pod> -n <name of namespace> -it -- /bin/bash
   ```
+6. Install a Helm chart:
+```
+helm install <app name> ./<chart path> -n <name of namespace> [--debug] [--dry-run]
+```
+7. Delete an app installed with Helm:
+```
+helm uninstall <app name> -n <name of namespace>
+```
+8. Scale a deployment:
+```
+kubectl scale -n <name of namespace> --replicas <number of replicas> deployment/<name of deployment>
+```
 
 ## Create a new namespace in Spin
 

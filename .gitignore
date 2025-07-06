@@ -1,5 +1,6 @@
 namespace/settings.toml
 mysql/settings.toml
+postgresql/settings.toml
 
 opt/etc/*
 
