@@ -83,5 +83,5 @@ kubectl -n <targeted_namespace> create secret generic kubeconfig --from-file=kub
 
 ## Create a new namespace in Spin
 
-[This guide](namespace/README.md) describes how to create namespaces on Spin.
+[This guide](namespace/) describes how to create namespaces on Spin.
 
