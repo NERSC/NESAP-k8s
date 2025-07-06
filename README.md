@@ -53,7 +53,7 @@ not a script in this project (i.e.the absolute path does not start with
 This would drop you into a shell containing `__PREFIX__` (note that `__DIR__`
 will have the same value as `__PREFIX__`).
 
-**> [!IMPORTANT]
+[!NOTE]
 > In interactive mode `$__PREFIX__/opt/bin:$__PREFIX__/opt/util` are appended to
 > `PATH`
 
