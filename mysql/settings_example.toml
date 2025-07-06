@@ -1,8 +1,10 @@
 [constant]
-nersc_user_pid = "<your nersc pid>"
-nersc_user_gid = "<the gid of the nersc project that you want to run this in>"
+nersc_user_id    = "<your nersc pid>"
+nersc_user_group = "<the gid of the nersc project that you want to run this in>"
 
 [zip]
+name = "mysql"
+tag = "9"
 db_name = "science"
 db_user_password = "pw"
 db_root_password = "rpw"
