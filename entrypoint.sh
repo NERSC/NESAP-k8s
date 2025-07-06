@@ -25,5 +25,15 @@ shift
 # Get the directory of the called script => __DIR__
 export __DIR__=$(__get_script_dir $script)
 
+export __MODE__="internal"
+script_path=$(which $script)
+if [[ "${script_path}" =~ ^/.* ]]
+then
+    if [[ ! "${script_path}" =~ "${__PREFIX__}" ]]
+    then
+        __MODE__="external"
+    fi
+fi
+
 # Execute the script with remaining arguments
 exec "$script" "$@"
