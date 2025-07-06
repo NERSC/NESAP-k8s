@@ -7,7 +7,6 @@
 1. [Andrew Naylor's](https://github.com/asnaylor) user-space prometheus-based
    [Workflow Monitoring Toolchain](https://github.com/asnaylor/nersc-metrics-scripts)
 
-
 ## Getting Started
 
 Before installing Helm Charts, you will need:
@@ -55,7 +54,8 @@ will have the same value as `__PREFIX__`).
 
 > [!NOTE]
 > In interactive mode `$__PREFIX__/opt/bin:$__PREFIX__/opt/util` are appended to
-> `PATH`
+> `PATH`. Furthemore `__DIR__` is unset (which might cause some scripts to
+> fail).
 
 ### Download `KUBECONFIG`
 
@@ -80,6 +80,33 @@ Using `kubectl`, create a `kubeconfig` secret in the targeted namespace
 ```bash
 kubectl -n <targeted_namespace> create secret generic kubeconfig --from-file=kubeconfig=<path to kubeconfig>
 ```
+
+## Frequently used `kubectl` and `helm` Commands
+
+1. List all namespaces in the cluster:
+```
+kubectl get namespaces
+```
+2. Get all developments in a given namespace:
+```
+kubectl get deployments -n <name of namespace>
+```
+3. Get logs of a specific development:
+```
+kubectl logs deployments/<deployment name> -n <name of namespace>
+```
+4. Get all pods in a namespace:
+```
+kubectl get pods -n <name of namespace>
+```
+5. Run command on pod:
+```
+kubectl exec <name of pod> -n <name of namespace> -- <command>
+```
+    * "Drop into" interactive shell on pod
+    ```
+    kubectl exec <name of pod> -n <name of namespace> -it -- /bin/bash
+    ```
 
 ## Create a new namespace in Spin
 
