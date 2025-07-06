@@ -7,44 +7,57 @@
 1. [Andrew Naylor's](https://github.com/asnaylor) user-space prometheus-based
    [Workflow Monitoring Toolchain](https://github.com/asnaylor/nersc-metrics-scripts)
 
-## Before you start
+
+## Getting Started
 
 Before installing Helm Charts, you will need:
 
-1. an existing or a new namespace of a Spin project;
-2. install `kubectl` and `helm`;
-3. obtain the `kubeconfig` from the Spin cluster where your project runs
-   (either the "development" or "production" cluster).
+1. Have a valid install of `kubectl` and `helm` -- we provide [helper
+   scripts](opt/util) that will download these to `opt/bin`;
+3. [Obtain the `kubeconfig`](#download-KUBECONFIG) from the Spin cluster where
+   your project runs (either the "development" or "production" cluster).
+Remeber to [use the entrypoint script](#use-the-entrypoint) when running the
+scripts in this project.
 
-## Create a new namespace in Spin
+### Use the Entrypoint
 
-[This guide](namespace/README.md) describes how to create namespaces on Spin.
+We want to ensure that the scripts have have predictable behavior, regardless of
+the execution context (e.g. where scripts are being run from). Bash kinda sucks
+at this (especially when handling relative paths) -- an imperfect (but
+acceptable) solution is to use a launcher script:
+[entrypoint.sh](./entrypoint.sh) which takes the command to run as its
+arguments. This can be run either as a standalone script, or in interactive
+mode.
 
-## Install `kubectl`
+`entrypoint.sh` sets two environment variables `__PREFIX__`, and `__DIR__`:
+* `__PREFIX__` contains the location of the project root (i.e. where
+`entrypoint.sh` is saved)
+* `__DIR__` contains the location of he script being run
 
-For up-to-date information, please refer to the [official
-documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
+#### Standalone Mode
 
-1. Obtain `kubectl` via `curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl`;
-2. Set the downloaded `kubectl` to be executable (`chmod +x kubectl`);
-3. move `kubectl` to its desired destination (e.g. `mv kubectl
-   $HOME/bin/kubectl`);
-4. parent directory of `kubectl` should be include in your `PATH` environment
-   variable, add it if needed (e.g. `export PATH=$HOME/bin:$PATH`)
+Standalone mode is invoked by passing the path to the script you want to run
+(relative the `entrypoint.sh`) as its arguments
+```
+./entrypoint.sh opt/util/get_kubectl.sh -n linux -a amd64 
+```
 
-## Install `helm`
+#### Interactive Mode
 
-For up-to-date information, please refer to the [official
-documentation](https://helm.sh/docs/intro/install/).
+Interactive mode is invoked whenever the command passed to `entrypoint.sh` is
+not a script in this project (i.e.the absolute path does not start with
+`$__PREFIX__`). Most often this is used to launch a shell:
+```
+./entrypoint.sh bash
+```
+This would drop you into a shell containing `__PREFIX__` (note that `__DIR__`
+will have the same value as `__PREFIX__`).
 
-1. Download your [desired version](https://github.com/helm/helm/releases)
-2. Unpack it (e.g. `tar -zxvf helm-v3.0.0-linux-amd64.tar.gz`)
-3. Find the helm binary in the unpacked directory, and move it to its desired
-   destination (e.g. `mv linux-amd64/helm $HOME/bin/helm`);
-4. parent directory of `helm` should be include in your `PATH` environment
-   variable, add it if needed (e.g. `export PATH=$HOME/bin:$PATH`)
+**> [!IMPORTANT]
+> In interactive mode `$__PREFIX__/opt/bin:$__PREFIX__/opt/util` are appended to
+> `PATH`
 
-## Download `KUBECONFIG`
+### Download `KUBECONFIG`
 
 KUBECONFIG is a YAML file containing the deteails of the k8s cluster, such as
 its address, and your own authentication credentials. It can be downloaded from
@@ -59,7 +72,7 @@ the Spin.
    to `$HOME/.kube/config`; alternatively, you can set the `KUBECONFIG`
 environment variable to the path to the downloaded YAML file.
 
-## Create `KUBECONFIG`secret
+#### (Optional) Create `KUBECONFIG`secret
 
 Using `kubectl`, create a `kubeconfig` secret in the targeted namespace
 (replace `<targeted_namespace>` and `<path to kubeconfig>` accordingly):
@@ -68,4 +81,7 @@ Using `kubectl`, create a `kubeconfig` secret in the targeted namespace
 kubectl -n <targeted_namespace> create secret generic kubeconfig --from-file=kubeconfig=<path to kubeconfig>
 ```
 
+## Create a new namespace in Spin
+
+[This guide](namespace/README.md) describes how to create namespaces on Spin.
 
