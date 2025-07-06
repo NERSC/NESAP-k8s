@@ -1,4 +1,5 @@
 namespace/settings.toml
+mysql/settings.toml
 
 opt/etc/*
 
