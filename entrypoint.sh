@@ -32,6 +32,7 @@ then
     if [[ ! "${script_path}" =~ "${__PREFIX__}" ]]
     then
         __MODE__="external"
+        unset __DIR__
     fi
 fi
 
