@@ -32,6 +32,7 @@ then
     if [[ ! "${script_path}" =~ "${__PREFIX__}" ]]
     then
         __MODE__="external"
+        PATH=$PATH:${__PREFIX__}/opt/bin:${__PREFIX__}/opt/util
         unset __DIR__
     fi
 fi
