@@ -103,10 +103,10 @@ kubectl get pods -n <name of namespace>
 ```
 kubectl exec <name of pod> -n <name of namespace> -- <command>
 ```
-    * "Drop into" interactive shell on pod
-    ```
-    kubectl exec <name of pod> -n <name of namespace> -it -- /bin/bash
-    ```
+  * "Drop into" interactive shell on pod
+  ```
+  kubectl exec <name of pod> -n <name of namespace> -it -- /bin/bash
+  ```
 
 ## Create a new namespace in Spin
 
