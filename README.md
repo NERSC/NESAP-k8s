@@ -124,3 +124,7 @@ kubectl scale -n <name of namespace> --replicas <number of replicas> deployment/
 
 [This guide](namespace/) describes how to create namespaces on Spin.
 
+## Create a database deployment on spin
+
+Take a look at our examples for [mysql](./mysql/) and [postgresql](./postgresql/)
+
