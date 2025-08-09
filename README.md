@@ -83,39 +83,39 @@ kubectl -n <targeted_namespace> create secret generic kubeconfig --from-file=kub
 
 ## Frequently used `kubectl` and `helm` Commands
 
-1. List all namespaces in the cluster:
+#### List all namespaces in the cluster:
 ```
 kubectl get namespaces
 ```
-2. Get all developments in a given namespace:
+#### Get all developments in a given namespace:
 ```
 kubectl get deployments -n <name of namespace>
 ```
-3. Get logs of a specific development:
+#### Get logs of a specific development:
 ```
 kubectl logs deployments/<deployment name> -n <name of namespace>
 ```
-4. Get all pods in a namespace:
+#### Get all pods in a namespace:
 ```
 kubectl get pods -n <name of namespace>
 ```
-5. Run command on pod:
+#### Run command on pod:
 ```
 kubectl exec <name of pod> -n <name of namespace> -- <command>
 ```
-  - "Drop into" interactive shell on pod
-  ```
-  kubectl exec <name of pod> -n <name of namespace> -it -- /bin/bash
-  ```
-6. Install a Helm chart:
+If you want to "drop into" interactive shell on pod
+```
+kubectl exec <name of pod> -n <name of namespace> -it -- /bin/bash
+```
+#### Install a Helm chart:
 ```
 helm install <app name> ./<chart path> -n <name of namespace> [--debug] [--dry-run]
 ```
-7. Delete an app installed with Helm:
+#### Delete an app installed with Helm:
 ```
 helm uninstall <app name> -n <name of namespace>
 ```
-8. Scale a deployment:
+#### Scale a deployment:
 ```
 kubectl scale -n <name of namespace> --replicas <number of replicas> deployment/<name of deployment>
 ```
@@ -128,3 +128,14 @@ kubectl scale -n <name of namespace> --replicas <number of replicas> deployment/
 
 Take a look at our examples for [mysql](./mysql/) and [postgresql](./postgresql/)
 
+# Comunity Resources
+
+## Postgress
+
+### Setup 
+
+For a basic setup, see Digitical Ocean's tutorial on [How to Deploy Postgres on K8s](https://www.digitalocean.com/community/tutorials/how-to-deploy-postgres-to-kubernetes-cluster). An enterprise-scale deployment is described in Cloudraft's tutorial on [How to Build Scalable and Reliable PostgreSQL Systems on Kubernetes](https://www.cloudraft.io/blog/postgresql-on-kubernetes).
+
+### Autoscaling
+
+Neon has a [Git repo on Postgres Autoscaling](https://github.com/neondatabase/autoscaling). A detailed description of setting up a scalabe Postgres cluster on K8s is given in [this Medium article](https://sagyam.medium.com/scaling-postgresql-with-kubernetes-694eae4e9dcb). Also note that [K8s operators can be used for autscaling](https://opensource.com/article/19/2/scaling-postgresql-kubernetes-operators), for example [Crunchy data's K8s operator](https://github.com/CrunchyData/postgres-operator)
