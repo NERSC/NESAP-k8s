@@ -49,12 +49,11 @@ not a script in this project (i.e.the absolute path does not start with
 ```
 ./entrypoint.sh bash
 ```
-This would drop you into a shell containing `__PREFIX__` (note that `__DIR__`
-will have the same value as `__PREFIX__`).
+This would drop you into a shell containing `__PREFIX__`.
 
 > [!NOTE]
 > In interactive mode `$__PREFIX__/opt/bin:$__PREFIX__/opt/util` are appended to
-> `PATH`. Furthemore `__DIR__` is unset (which might cause some scripts to
+> `PATH`. Furthemore `__DIR__` is unset (which might cause some scripts -- which are not meant to operate in interactive mode -- to
 > fail).
 
 ### Download `KUBECONFIG`
